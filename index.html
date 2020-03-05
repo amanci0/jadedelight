@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jade Delight</title>
+<style type="text/css">
+	body {margin:none;}
+	html, input {font-family: avenir; font-size: 15px; color: #0A3200; background-color: #A6D3A0; border: 1px solid #0A3200; }
+	h1 {text-align: center; color: #0A3200;}
+	input [type = submit]{ background-color: #0A3200;}
+	form{text-align: center;}
+	table.center{margin-left: auto; margin-right: auto;}
+</style>
+</head>
+
+<body>
+<script language="javascript">
+
+function MenuItem(name, cost)
+{
+	this.name = name;
+	this.cost=cost;
+}
+
+menuItems = new Array(
+	new MenuItem("Chicken Chop Suey", 4.5),
+	new MenuItem("Sweet and Sour Pork", 6.25),
+	new MenuItem("Shrimp Lo Mein", 5.25),
+	new MenuItem("Moo Shi Chicken", 6.5),
+	new MenuItem("Fried Rice", 2.35)
+);
+
+function makeSelect(name, minRange, maxRange)
+{
+	var t= "";
+	t = "<select name='" + name + "' size='1'>";
+	for (j=minRange; j<=maxRange; j++)
+	   t += "<option>" + j + "</option>";
+	t+= "</select>"; 
+	return t;
+}
+</script>
+
+<h1>Jade Delight</h1>
+<form name = "form1" onsubmit="return validate()">
+
+<p>First Name: <input type="text"  name='fname' /></p>
+<p>Last Name*:  <input type="text"  name='lname' /></p>
+<p>Street: <input type="text"  name='street' /></p>
+<p>City: <input type="text"  name='city' /></p>
+<p>Phone*: <input type="text"  name='phone'/></p>
+<p> 
+	<input type="radio"  name="p_or_d" value = "pickup" id = "pickup" checked="checked"/>Pickup  
+	<input type="radio"  name='p_or_d' value = "delivery" id = "delivery"/>
+	Delivery
+</p>
+<table class = "center" border="0" cellpadding="3" id = "table1">
+  <tr>
+    <th>Select Item</th>
+    <th>Item Name</th>
+    <th>Cost Each</th>
+    <th>Total Cost</th>
+  </tr>
+<script language="javascript">
+
+  var s = "";
+  for (i=0; i< menuItems.length; i++)
+  {
+	  s += "<tr><td>";
+	  s += makeSelect("quan" + i, 0, 10);
+	  s += "</td><td>" + menuItems[i].name + "</td>";
+	  s += "<td> $ " + menuItems[i].cost.toFixed(2) + "</td>";
+	  s += "<td>$<input type='text' name='cost'/></td></tr>";
+  }
+  document.writeln(s);
+
+</script>
+</table>
+<p>Subtotal: 
+   $<input type="text"  name='subtotal' id="subtotal" />
+</p>
+<p>Mass tax 6.25%:
+  $ <input type="text"  name='tax' id="tax" />
+</p>
+<p>Total: $ <input type="text"  name='total' id="total" />
+</p>
+
+<input type = "submit" value = "Submit Order" />
+
+</form>
+</body>
+</html>
+
+<script type="text/javascript">
+//start of my code
+
+document.form1.quan0.onchange = function(){updatedPrice()};
+document.form1.quan1.onchange = function(){updatedPrice()};
+document.form1.quan2.onchange = function(){updatedPrice()};
+document.form1.quan3.onchange = function(){updatedPrice()};
+document.form1.quan4.onchange = function(){updatedPrice()};
+
+function updatedPrice(){
+	val0 = document.form1.quan0.selectedIndex;
+	chickenPrice = parseFloat(val0 * 4.5);
+	document.form1.cost[0].value = chickenPrice.toFixed(2);
+
+	val1 = document.form1.quan1.selectedIndex;
+	porkPrice = parseFloat(val1 * 6.25);
+	document.form1.cost[1].value = porkPrice.toFixed(2);
+
+	val2 = document.form1.quan2.selectedIndex;
+	shrimpPrice = parseFloat(val2 * 5.25);
+	document.form1.cost[2].value = shrimpPrice.toFixed(2);
+
+	val3 = document.form1.quan3.selectedIndex;
+	mooshiPrice = parseFloat(val3 * 6.5);
+	document.form1.cost[3].value = mooshiPrice.toFixed(2);
+
+	val4 = document.form1.quan4.selectedIndex;
+	ricePrice = parseFloat(val4 * 2.35)
+	document.form1.cost[4].value = ricePrice.toFixed(2);
+
+	subtotal = chickenPrice + porkPrice + shrimpPrice + mooshiPrice + ricePrice;
+	document.form1.subtotal.value = subtotal.toFixed(2);
+
+	tax = subtotal * .0625;
+	document.form1.tax.value = tax.toFixed(2);
+
+	finalTotal = subtotal + tax;
+	document.form1.total.value = finalTotal.toFixed(2);
+}
+
+function time() {
+	totalCost = document.form1.total.value;
+	d = new Date();
+	hour = d.getHours();
+	min = d.getMinutes();
+
+	if (hour < 12) {
+		if (document.getElementById("pickup").checked){
+			min = min + 15;
+			if (min >= 60) {
+				hour += 1;
+				min = min - 60;
+				time = hour + ":" + min;
+			}
+			else
+			time = hour + ":" + min;
+		}
+		if (document.getElementById("delivery").checked){
+			min = min + 30;
+			if (min >= 60) {
+				hour += 1;
+				min = min - 60;
+				time = hour + ":" + min;
+			}
+			else
+			time = hour + ":" + min;
+		}
+	}
+		if (hour > 12) {
+		if (document.getElementById("pickup").checked){
+			min = min + 15;
+			if (min >= 60) {
+				hour += 1;
+				min = min - 60;
+				time = hour + ":" + min;
+			}
+			else
+			time = hour + ":" + min;
+		}
+		if (document.getElementById("delivery").checked){
+			min = min + 30;
+			if (min >= 60) {
+				hour += 1;
+				min = min - 60;
+				time = hour + ":" + min;
+			}
+			else
+			time = hour + ":" + min;
+		}
+	}
+
+	document.write("Thank you for ordering. Your total is $", totalCost, " Your food will be ready at ", time);
+}
+
+function validate() {
+first = document.form1.fname.value;
+last = document.form1.lname.value;
+address = document.form1.street.value;
+location = document.form1.city.value;
+phoneNum = document.form1.phone.value;
+
+
+if (first == "" || last == "") {
+	alert ("You must fill out a full name.");
+	return false;
+}
+
+if (phoneNum == ""){
+	alert ("You must fill out a phone number.");
+	return false;
+}
+
+if (document.getElementById("delivery").checked) {
+	if (address == "" || location == ""){
+		alert ("You must fill out an address for delivery.");
+		return false;
+		}
+	} 
+	
+
+
+time();
+return true;
+
+}
+//end of my code
+</script>
+
